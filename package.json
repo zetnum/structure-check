@@ -1,6 +1,6 @@
 {
   "name": "@zetnum/structure-check",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Validates weighted directory trees — ensures child indices don't overflow into sibling ranges",
   "type": "module",
   "engines": {
@@ -12,7 +12,9 @@
     "structure-check": "./dist/bin/cli.js"
   },
   "files": [
-    "dist/bin/",
+    "dist/bin/cli.js",
+    "dist/bin/parse-args.js",
+    "dist/bin/parse-config.js",
     "dist/validation/validate.js",
     "dist/validation/validate-level.js",
     "dist/filtering/filter-ignored.js",
