@@ -1,0 +1,5 @@
+language js
+
+TsInterfaceDeclaration() as $decl where {
+	register_diagnostic(span=$decl, message="no-interface: use `type` instead of `interface`", severity="error")
+}

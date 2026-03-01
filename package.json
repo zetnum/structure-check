@@ -1,0 +1,54 @@
+{
+  "name": "@zetnum/structure-check",
+  "version": "1.0.0",
+  "description": "Validates weighted directory trees — ensures child indices don't overflow into sibling ranges",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.30.3"
+  },
+  "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017",
+  "bin": {
+    "structure-check": "./dist/bin/cli.js"
+  },
+  "files": [
+    "dist/bin/",
+    "dist/validation/validate.js",
+    "dist/validation/validate-level.js",
+    "dist/filtering/filter-ignored.js",
+    "dist/parsing/get-numbered-dirs.js",
+    "dist/parsing/parse-index.js",
+    "dist/types/*.d.ts"
+  ],
+  "scripts": {
+    "build": "tsgo",
+    "test": "pnpm build && node --test dist/**/*.test.js",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "format": "biome format --write src/",
+    "prepare": "pnpm build"
+  },
+  "keywords": [
+    "directory",
+    "index",
+    "validator",
+    "weighted-tree",
+    "knowledge-base",
+    "numbering"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zetnum/structure-check"
+  },
+  "author": "Gleb Shaltaev",
+  "devDependencies": {
+    "@biomejs/biome": "2.4.4",
+    "@types/node": "24.11.0",
+    "@typescript/native-preview": "7.0.0-dev.20260301.1",
+    "biome-plugin-no-type-assertion": "1.0.2"
+  }
+}

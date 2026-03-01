@@ -1,0 +1,5 @@
+language js
+
+JsExportNamedClause() as $exp where {
+	register_diagnostic(span=$exp, message="no-grouped-export: use inline `export` instead of `export { }`", severity="error")
+}

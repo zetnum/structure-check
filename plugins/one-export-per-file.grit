@@ -1,0 +1,6 @@
+language js
+
+JsExport() as $exp where {
+	$exp <: after JsExport(),
+	register_diagnostic(span=$exp, message="one-export-per-file: each file must have at most one `export`", severity="error")
+}
