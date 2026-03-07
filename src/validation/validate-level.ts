@@ -2,9 +2,14 @@ import { getNumberedDirs } from "../parsing/get-numbered-dirs.js";
 import type { DirEntry } from "../types/dir-entry.js";
 import type { Issue } from "../types/issue.js";
 
-function minGapForDepth(depth: number): number {
+function computeGroupBase(maxIndex: number): number {
+  if (maxIndex <= 10) return 1;
+  return 10 ** (Math.floor(Math.log10(maxIndex)) - 1);
+}
+
+function minGapForDepth(depth: number, groupBase: number): number {
   if (depth === 0) {
-    return 100;
+    return groupBase / 10;
   }
   if (depth === 1) {
     return 10;
@@ -17,11 +22,12 @@ function computeCeiling(
   nextSibling: DirEntry | undefined,
   depth: number,
   maxIndex: number,
+  groupBase: number,
 ): number | null {
   if (depth === 0) {
-    const thousandBase = Math.floor(current.index / 1000) * 1000;
+    const base = Math.floor(current.index / groupBase) * groupBase;
     const boundary = nextSibling ? nextSibling.index : maxIndex;
-    return boundary - thousandBase;
+    return boundary - base;
   }
 
   if (!nextSibling) {
@@ -30,12 +36,12 @@ function computeCeiling(
   return nextSibling.index - current.index;
 }
 
-function computeFloor(current: DirEntry, depth: number): number {
+function computeFloor(current: DirEntry, depth: number, groupBase: number): number {
   if (depth !== 0) {
     return 1;
   }
-  const thousandBase = Math.floor(current.index / 1000) * 1000;
-  return current.index - thousandBase + 1;
+  const base = Math.floor(current.index / groupBase) * groupBase;
+  return current.index - base + 1;
 }
 
 function checkFloorViolations(
@@ -63,6 +69,7 @@ function checkCeilingViolations(
   nextSibling: DirEntry | undefined,
   maxIndex: number,
   depth: number,
+  groupBase: number,
   rel: string,
   issues: Issue[],
 ): void {
@@ -79,7 +86,7 @@ function checkCeilingViolations(
     }
   }
 
-  const minGap = minGapForDepth(depth);
+  const minGap = minGapForDepth(depth, groupBase);
   if (ceiling < minGap) {
     issues.push({
       severity: "warning",
@@ -96,6 +103,7 @@ export function validateLevel(
   maxIndex: number,
   depth = 0,
 ): void {
+  const groupBase = computeGroupBase(maxIndex);
   const dirs = getNumberedDirs(parentPath);
   if (dirs.length === 0) {
     return;
@@ -107,8 +115,8 @@ export function validateLevel(
       continue;
     }
     const nextSibling = dirs[i + 1];
-    const ceiling = computeCeiling(current, nextSibling, depth, maxIndex);
-    const floor = computeFloor(current, depth);
+    const ceiling = computeCeiling(current, nextSibling, depth, maxIndex, groupBase);
+    const floor = computeFloor(current, depth, groupBase);
     const rel = current.path.replace(`${rootPath}/`, "");
 
     if (depth === 0 && current.index >= maxIndex) {
@@ -130,6 +138,7 @@ export function validateLevel(
         nextSibling,
         maxIndex,
         depth,
+        groupBase,
         rel,
         issues,
       );

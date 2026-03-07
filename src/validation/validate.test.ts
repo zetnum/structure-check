@@ -205,8 +205,8 @@ describe("namespace limit", () => {
 
   it("top-level folder at or above maxIndex is an error", () => {
     setup(() => {
-      dir("900-data", "901-models");
-      dir("1000-overflow", "001-bad");
+      dir("900-data", "01-models");
+      dir("1000-overflow", "01-bad");
     });
 
     const e = errs(validate(state.tmpDir, { maxIndex: 1000 }));
@@ -218,10 +218,10 @@ describe("namespace limit", () => {
 
   it("custom maxIndex — corporate namespace [0, 1000)", () => {
     setup(() => {
-      dir("000-root", "001-config");
-      dir("100-frontend", "101-components");
-      dir("500-backend", "501-api");
-      dir("900-archive", "901-toc");
+      dir("000-root", "01-config");
+      dir("100-frontend", "01-components");
+      dir("500-backend", "01-api");
+      dir("900-archive", "01-toc");
     });
 
     assert.equal(errs(validate(state.tmpDir, { maxIndex: 1000 })).length, 0);
