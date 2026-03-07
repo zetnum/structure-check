@@ -15,6 +15,7 @@
  *   1  Errors found
  */
 
+import { createRequire } from "node:module";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -99,7 +100,12 @@ const maxIndex = maxFromFlag ?? configMaxIndex ?? 10_000;
 
 // --- Run validation ---
 
-console.log("structure-check v1.0.0\n");
+const require = createRequire(import.meta.url);
+const pkg: unknown = require("../../package.json");
+if (typeof pkg !== "object" || pkg === null || !("version" in pkg) || typeof pkg.version !== "string") {
+  throw new Error("package.json missing version field");
+}
+console.log(`structure-check v${pkg.version}\n`);
 console.log(`Scanning: ${targetDir}`);
 console.log(`Namespace: [0, ${maxIndex})\n`);
 
